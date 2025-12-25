@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Избранное{% endblock %}
+
+{% block extra_styles %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #ffe6ee;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .header {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 0px 15px rgba(255, 105, 180, 0.6);
+    }
+    .courts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+    .court-card {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 0px 15px rgba(255, 105, 180, 0.3);
+        border-left: 4px solid #ff3366;
+    }
+    .btn {
+        display: inline-block;
+        padding: 8px 15px;
+        background: #ff69b4;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 5px;
+    }
+    .favorite-btn {
+        color: #ff3366;
+        font-size: 20px;
+        text-decoration: none;
+    }
+    .no-favorites {
+        text-align: center;
+        padding: 40px;
+        background: white;
+        border-radius: 15px;
+        color: #666;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>❤️ Избранные корты</h1>
+        <a href="/court" class="btn">Все корты</a>
+        <a href="/" class="btn">На главную</a>
+    </div>
+
+    {% if favorites %}
+        <div class="courts-grid">
+            {% for court in favorites %}
+            <div class="court-card">
+                <h3>{{ court.name }}</h3>
+                <p><strong>Адрес:</strong> {{ court.location }}</p>
+                <p><strong>Цена:</strong> {{ court.price_per_hour }} руб/час</p>
+
+                <div style="margin-top: 15px;">
+                    <a href="/booking/create?court_id={{ court.id }}" class="btn">Забронировать</a>
+                    <a href="/favorites/toggle/{{ court.id }}" class="favorite-btn">❤️ Убрать из избранного</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="no-favorites">
+            <h2>У вас пока нет избранных кортов</h2>
+            <p>Добавляйте корты в избранное, чтобы быстро находить их!</p>
+            <a href="/court" class="btn">Посмотреть корты</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

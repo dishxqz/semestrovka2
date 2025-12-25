@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Мои брони{% endblock %}
+
+{% block extra_styles %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #ffe6ee;
+        margin: 0;
+        padding: 20px;
+    }
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .header {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 0px 15px rgba(255, 105, 180, 0.6);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0px 15px rgba(255, 105, 180, 0.3);
+    }
+    th, td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ffd6e0;
+    }
+    th {
+        background: #fff5f8;
+        color: #333;
+    }
+    .btn {
+        padding: 8px 15px;
+        background: #ff69b4;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+    .btn-danger {
+        background: #ff3366;
+    }
+    .status-active {
+        color: green;
+        font-weight: bold;
+    }
+    .status-cancelled {
+        color: red;
+        font-weight: bold;
+    }
+    .no-bookings {
+        text-align: center;
+        padding: 40px;
+        background: white;
+        border-radius: 15px;
+        color: #666;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h1>Мои брони</h1>
+        <a href="/" class="btn">На главную</a>
+        <a href="/court" class="btn">Посмотреть корты</a>
+    </div>
+
+    {% if bookings %}
+        <table>
+            <tr>
+                <th>Корт</th>
+                <th>Дата и время</th>
+                <th>Статус</th>
+                <th>Действия</th>
+            </tr>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.court_name }}</td>
+                <td>{{ booking.start_time.strftime('%d.%m.%Y %H:%M') }} - {{ booking.end_time.strftime('%H:%M') }}</td>
+                <td>
+                    {% if booking.status == 'active' %}
+                        <span class="status-active">Активна</span>
+                    {% else %}
+                        <span class="status-cancelled">Отменена</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if booking.status == 'active' %}
+                        <a href="/booking/cancel/{{ booking.id }}" class="btn btn-danger">Отменить</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <div class="no-bookings">
+            <h2>У вас пока нет броней</h2>
+            <p>Найдите подходящий корт и забронируйте время для баскетбольчика</p>
+            <a href="/court" class="btn">Посмотреть корты</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

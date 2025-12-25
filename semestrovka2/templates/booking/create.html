@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Бронирование{% endblock %}
+
+{% block extra_styles %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #ffe6ee;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+    .form-box {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0px 15px rgba(255, 105, 180, 0.6);
+        width: 320px;
+    }
+    h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    input, select {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        border: 2px solid #ffb6c1;
+        border-radius: 8px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+    button {
+        width: 100%;
+        padding: 14px;
+        background: #ff69b4;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    button:hover {
+        background: #ff1493;
+    }
+    p[style*="color: red"] {
+        background: #ffe4e9;
+        color: #ff3366;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+    .btn {
+        display: block;
+        padding: 10px;
+        background: #ffb6c1;
+        color: #333;
+        text-decoration: none;
+        border-radius: 8px;
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-box">
+    <h1>Бронирование корта</h1>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" action="/booking/create">
+        <input type="hidden" name="court_id" value="{{ court.id }}">
+        <p>Корт: <strong>{{ court.name }}</strong></p>
+        <p>Дата: <input type="date" name="date" required></p>
+        <p>Время:
+            <select name="start_time" required>
+                <option value="08:00">08:00</option>
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+                <option value="18:00">18:00</option>
+                <option value="19:00">19:00</option>
+                <option value="20:00">20:00</option>
+            </select>
+        </p>
+        <p>Часы:
+            <select name="hours">
+                <option value="1">1 час</option>
+                <option value="2">2 часа</option>
+                <option value="3">3 часа</option>
+            </select>
+        </p>
+        <p><button type="submit">Забронировать</button></p>
+    </form>
+    <a href="/court" class="btn">Назад</a>
+</div>
+{% endblock %}

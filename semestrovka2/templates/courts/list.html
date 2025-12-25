@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Корты{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .header {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 0px 15px rgba(255, 105, 180, 0.6);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0px 15px rgba(255, 105, 180, 0.3);
+    }
+    th, td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #ffd6e0;
+    }
+    th {
+        background: #fff5f8;
+        color: #333;
+    }
+    .btn {
+        display: inline-block;
+        padding: 8px 15px;
+        background: #ff69b4;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 2px;
+    }
+    .btn:hover {
+        background: #ff1493;
+    }
+    .btn-danger {
+        background: #ff3366;
+    }
+    .admin-panel {
+        background: #fff5f8;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 2px solid #ff3366;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if session.role == 'admin' %}
+    <div class="admin-panel">
+        <h3>Добавить корт</h3>
+        <form method="POST" action="/court/create">
+            <input type="text" name="name" placeholder="Название корта" required style="margin: 5px; padding: 8px;">
+            <input type="text" name="location" placeholder="Адрес" required style="margin: 5px; padding: 8px;">
+            <input type="number" name="price_per_hour" placeholder="Цена за час" required style="margin: 5px; padding: 8px;">
+            <button type="submit" class="btn" style="background: #ff3366;">➕</button>
+        </form>
+    </div>
+    {% endif %}
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Адрес</th>
+            <th>Цена/час</th>
+            <th>Действия</th>
+            <th>❤️</th>
+        </tr>
+        {% for court in courts %}
+        <tr>
+            <td>{{ court.id }}</td>
+            <td>{{ court.name }}</td>
+            <td>{{ court.location }}</td>
+            <td>{{ court.price_per_hour }} руб.</td>
+            <td>
+                {% if session.user_id %}
+                    <a href="/booking/create?court_id={{ court.id }}" class="btn">Забронировать</a>
+                {% else %}
+                    <a href="/users/login" class="btn">Войдите для брони</a>
+                {% endif %}
+            </td>
+             <td>
+                {% if session.user_id %}
+                    <a href="/booking/create?court_id={{ court.id }}" class="btn">Забронировать</a>
+                    {% if session.role == 'admin' %}
+                        <a href="/court/edit/{{ court.id }}" class="btn" style="background: #4CAF50;">✏️</a>
+                        <a href="/court/delete/{{ court.id }}" class="btn btn-danger"
+                            onclick="return confirm('Удалить корт?')">🗑️</a>
+                    {% endif %}
+                {% else %}
+                     <a href="/users/login" class="btn">Войдите для брони</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% if session.user_id and session.role != 'admin' %}
+    <div style="margin-top: 20px; padding: 15px; background: #fff5f8; border-radius: 10px;">
+        <p><strong>Для пользователей:</strong> Чтобы добавить новый корт, обратитесь к администратору.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

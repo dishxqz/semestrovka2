@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Редактирование профиля{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .form-box {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0px 15px rgba(255, 105, 180, 0.6);
+        width: 320px;
+        margin: 0 auto;
+    }
+    h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 25px;
+    }
+    input, select {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0;
+        border: 2px solid #ffb6c1;
+        border-radius: 8px;
+        font-size: 16px;
+        box-sizing: border-box;
+    }
+    input:focus, select:focus {
+        outline: none;
+        border-color: #ff69b4;
+    }
+    button {
+        width: 100%;
+        padding: 14px;
+        background: #ff69b4;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    button:hover {
+        background: #ff1493;
+    }
+    p[style*="color: red"] {
+        background: #ffe4e9;
+        color: #ff3366;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+    .btn {
+        display: block;
+        padding: 10px;
+        background: #ffb6c1;
+        color: #333;
+        text-decoration: none;
+        border-radius: 8px;
+        text-align: center;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-box">
+    <h1>Редактирование профиля</h1>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST" action="/users/profile/edit">
+        <p>Полное имя: <input type="text" name="full_name" value="{{ user.full_name or '' }}"></p>
+        <p>Телефон: <input type="text" name="phone" value="{{ user.phone or '' }}"></p>
+        <p>Уровень игры:
+            <select name="skill_level">
+                <option value="beginner" {% if user.skill_level == 'beginner' %}selected{% endif %}>Новичок</option>
+                <option value="intermediate" {% if user.skill_level == 'intermediate' %}selected{% endif %}>Средний</option>
+                <option value="advanced" {% if user.skill_level == 'advanced' %}selected{% endif %}>Продвинутый</option>
+            </select>
+        </p>
+        <p>Предпочтительное время:
+            <select name="preferred_time">
+                <option value="">Любое</option>
+                <option value="morning" {% if user.preferred_time == 'morning' %}selected{% endif %}>Утро</option>
+                <option value="afternoon" {% if user.preferred_time == 'afternoon' %}selected{% endif %}>День</option>
+                <option value="evening" {% if user.preferred_time == 'evening' %}selected{% endif %}>Вечер</option>
+            </select>
+        </p>
+        <p><button type="submit">Сохранить изменения</button></p>
+    </form>
+    <a href="/users/profile" class="btn">Назад к профилю</a>
+</div>
+{% endblock %}

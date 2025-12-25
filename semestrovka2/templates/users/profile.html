@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Профиль</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffe6ee;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .profile-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0px 15px rgba(255, 105, 180, 0.6);
+            width: 500px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .info {
+            margin: 15px 0;
+            padding: 15px;
+            background: #fff5f8;
+            border-radius: 8px;
+            border-left: 4px solid #ff69b4;
+        }
+        .info strong {
+            color: #ff69b4;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #ff69b4;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 5px;
+        }
+        .btn-danger {
+            background: #ff3366;
+        }
+        .btn-danger:hover {
+            background: #ff0040;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ffb6c1;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #fff5f8;
+        }
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+        .status-cancelled {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-box">
+        <h1>Ваш профиль</h1>
+
+        <div class="info">
+            <p><strong>Имя пользователя:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Роль:</strong>
+                {% if user.role == 'admin' %}
+                    <span style="color: red; font-weight: bold;">Администратор</span>
+                {% else %}
+                    Пользователь
+                {% endif %}
+            </p>
+            <p><strong>Дата регистрации:</strong> {{ user.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+        </div>
+        <div class="info" style="margin-top: 20px;">
+            <h3>Дополнительная информация:</h3>
+            <p><strong>Полное имя:</strong> {{ user.full_name or 'Не указано' }}</p>
+            <p><strong>Телефон:</strong> {{ user.phone or 'Не указан' }}</p>
+            <p><strong>Уровень игры:</strong> {{ user.skill_level or 'Не указан' }}</p>
+            <p><strong>Предпочтительное время:</strong> {{ user.preferred_time or 'Любое' }}</p>
+            <a href="/users/profile/edit" class="btn" style="margin-top: 10px;">✏️ Редактировать профиль</a>
+        </div>
+        <h2>Мои брони:</h2>
+        {% if bookings %}
+            <table>
+                <tr>
+                    <th>Корт</th>
+                    <th>Время</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+                {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.court_name }}</td>
+                    <td>{{ booking.start_time.strftime('%d.%m.%Y %H:%M') }} - {{ booking.end_time.strftime('%H:%M') }}</td>
+                    <td>
+                        {% if booking.status == 'active' %}
+                            <span class="status-active">Активна</span>
+                        {% else %}
+                            <span class="status-cancelled">Отменена</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if booking.status == 'active' %}
+                            <a href="/booking/cancel/{{ booking.id }}" class="btn btn-danger" onclick="return confirm('Отменить бронь?')">Отменить</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p style="text-align: center; color: #666;">У вас пока нет броней</p>
+        {% endif %}
+
+        <div style="margin-top: 20px; text-align: center;">
+            <a class="btn" href="/">На главную</a>
+            <a class="btn btn-danger" href="/logout">Выйти</a>
+        </div>
+    </div>
+</body>
+</html>

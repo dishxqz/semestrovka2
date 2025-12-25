@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Главная</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #ffe6ee;
+            margin: 0;
+            padding: 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0px 15px rgba(255, 105, 180, 0.6);
+            text-align: center;
+            width: 300px;
+        }
+        .basketball-img {
+            margin-top: 170px;
+            width: 750px;
+            margin-bottom: 0px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #ff69b4;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #ff1493;
+        }
+        p {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Бронирование баскетбольчика</h1>
+
+            {% if not session.get('user_id') %}
+                <p><a href="/users/login" class="btn">Войти</a></p>
+                <p><a href="/users/register" class="btn">Зарегистрироваться</a></p>
+            {% else %}
+                <p>Вы вошли как {{ session.username }}</p>
+                <p><a href="/users/profile" class="btn">Профиль</a></p>
+                <p><a href="/court" class="btn">Корты</a></p>
+                <p><a href="/favorites" class="btn">Избранные корты</a></p>
+                <p><a href="/booking/owner_list" class="btn">Мои брони</a></p>
+                {% if session.role == 'admin' %}
+                    <p><a href="/court" class="btn" style="background: #ff3366;">Админка</a></p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+    <img src="{{ url_for('static', filename='basket.png') }}"
+         alt="Баскетбол"
+         class="basketball-img"
+         onerror="this.style.display='none'">
+</body>
+</html>
